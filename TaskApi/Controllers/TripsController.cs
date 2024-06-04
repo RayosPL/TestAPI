@@ -26,12 +26,12 @@ public class TripsController : ControllerBase
         return Ok(tripItems);
     }
 
-    [HttpGet("filtered/{country}")]
+    [HttpGet("country/{country}")]
     public IActionResult GetTrips(string country)
     {
         var tripItems = _tripsRepository.GetSpecificSimplifiedTrips(country);
         return Ok(tripItems);
-    }
+    } 
 
     [HttpGet("{name}")]
     public IActionResult GetConcreteTripByName(string name)
@@ -91,6 +91,7 @@ public class TripsController : ControllerBase
             return BadRequest("This trip does not exists");
         }
     }
+    
     [HttpDelete]
     public IActionResult RemoveTrip(string name)
     {
