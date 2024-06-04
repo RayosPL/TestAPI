@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +74,11 @@ public class TripsController : ControllerBase
     [HttpPut("{name}/{email}")]
     public IActionResult RegisterForATrip(string name, string email)
     {
+        var isValidEmail = Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        if(!isValidEmail)
+        {
+            return BadRequest("Incorrect format of given email!");
+        }
         var trip = _tripsRepository.GetConcreteFullTripByName(name);
         if (trip is not null)
         {
@@ -91,7 +97,7 @@ public class TripsController : ControllerBase
             return BadRequest("This trip does not exists");
         }
     }
-    
+
     [HttpDelete]
     public IActionResult RemoveTrip(string name)
     {

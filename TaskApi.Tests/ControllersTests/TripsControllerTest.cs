@@ -192,6 +192,30 @@ public class TripsControllerTest
             Assert.That(result.Value.ToString(), Is.EqualTo("Email already registered"));
         });
     }
+
+    [Test]
+    public void RegisterForATrip_ReturnsBadRequest_WhenWrongEmail()
+    {        
+        var fullTripDto = new FullTripDTO()
+        {
+            Name = "Full Trip",
+            Country = "USA",
+            Description = "We're all living in America",
+            NumberOfSeats = 5,
+            StartDate = DateTime.MinValue
+        };
+        _tripsRepository.GetConcreteFullTripByName(fullTripDto.Name).Returns(fullTripDto);
+
+        var email = "WRONGFORMAT";
+        var result = _tripsController.RegisterForATrip(fullTripDto.Name, email) as BadRequestObjectResult;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value.ToString(), Is.EqualTo("Incorrect format of given email!"));
+        });
+    }
+
     [Test]
     public void RegisterForATrip_ReturnsBadRequest_WhenNoSeatsLeft()
     {
@@ -213,6 +237,7 @@ public class TripsControllerTest
             Assert.That(result.Value.ToString(), Is.EqualTo("This trip has no seats available"));
         });
     }
+
     [Test]
     public void RegisterForATrip_ReturnsBadRequest()
     {
